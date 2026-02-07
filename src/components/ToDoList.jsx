@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { Edit, Trash2, Plus, X, Save } from 'lucide-react';
 import supabase from '../supabase-client';
 
-export const ToDoList = () => {
+export const ToDoList = ({ session }) => {
     // Main Form (New Entry)
     const { register, handleSubmit, reset } = useForm();
 
@@ -33,7 +33,13 @@ export const ToDoList = () => {
     };
 
     const onSubmit = async (data) => {
-        const { error } = await supabase.from('tasks').insert(data).single();
+        const userEmail = session.user.email;
+        if (!userEmail) {
+            alert("No user logged in");
+            return;
+        }
+        const taskData = { ...data, email: userEmail };
+        const { error } = await supabase.from('tasks').insert(taskData).single();
         if (error) {
             console.error('Error adding task:', error);
         } else {
@@ -78,7 +84,6 @@ export const ToDoList = () => {
             })
             .eq('id', editingTask.id)
             .single();
-
         if (error) {
             console.error('Error updating task:', error);
         } else {
