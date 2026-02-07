@@ -32,7 +32,8 @@ export const Auth = () => {
         if(error){
             console.log(error);
         }else{
-            alert("Account created successfully")
+            alert("Account created successfully");
+            alert("Please Check Email for Verification");
         }
         // Simulate API call
         setTimeout(() => {
